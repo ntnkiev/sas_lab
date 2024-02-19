@@ -29,7 +29,7 @@ def smib_search() -> dict:
                     jsn = json.loads(data)
                     if addr not in smib_dict:
                         smib_dict.update({addr : jsn})
-                    print(time.time())
+                    print(time.time() - start_time)
                     print (smib_dict)
                     time.sleep(5)
                     break
@@ -38,6 +38,7 @@ def smib_search() -> dict:
                 break
 
 if __name__ == "__main__":
+    start_time = time.time()
     smib_search()
 # search_proc = multiprocessing.Process(target=smib_search)
 # search_proc.start()
