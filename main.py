@@ -6,7 +6,6 @@ import json
 from socket import *
 import multiprocessing
 
-MYPORT = 30624
 UDP_IP = gethostbyname(gethostname())
 UDP_PORT = 30624
 TCP_PORT = 30625
@@ -22,7 +21,7 @@ def smib_search() -> dict:
 
     while True:
         command = '{"cmd":"browse"}'.encode()
-        sock.sendto(command, ('<broadcast>', MYPORT))
+        sock.sendto(command, ('<broadcast>', UDP_PORT))
         while True:
             try:
                 data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
@@ -33,9 +32,8 @@ def smib_search() -> dict:
                     print (smib_dict)
                     time.sleep(5)
                     break
-                else:
-                    print(f'{addr} : {data}')
             except TimeoutError:
+                print("UDP socket timeout error")
                 break
 
 if __name__ == "__main__":
