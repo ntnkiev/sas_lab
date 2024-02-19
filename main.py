@@ -29,6 +29,7 @@ def smib_search() -> dict:
                     jsn = json.loads(data)
                     if addr not in smib_dict:
                         smib_dict.update({addr : jsn})
+                    print(time.time())
                     print (smib_dict)
                     time.sleep(5)
                     break
