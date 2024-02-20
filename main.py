@@ -5,6 +5,7 @@ import sys, time
 import json
 from socket import *
 import multiprocessing
+from colorama import *
 
 UDP_IP = gethostbyname(gethostname())
 UDP_PORT = 30624
@@ -22,6 +23,8 @@ def smib_search() -> dict:
 
     while True:
         command = '{"cmd":"browse"}'.encode()
+        print("Start broadcast")
+        n = 0
         sock.sendto(command, ('<broadcast>', UDP_PORT))
         while True:
             try:
@@ -30,12 +33,13 @@ def smib_search() -> dict:
                     jsn = json.loads(data)
                     if addr not in smib_dict:
                         smib_dict.update({addr : jsn})
-                    print(time.time() - start_time)
-                    print (smib_dict)
+                    print(f'{time.time() - start_time:.2f}')
+                    for key in smib_dict.keys():
+                        print(f'Fore.GREEN + {key} + Style.RESET_ALL : Fore.BLUE + {smib_dict[key]} + Style.RESET_ALL\n')
                     time.sleep(5)
                     break
             except TimeoutError:
-                print("UDP socket timeout error")
+                print(Fore.RED + "UDP socket timeout error" + Style.RESET_ALL)
                 break
 
 if __name__ == "__main__":
