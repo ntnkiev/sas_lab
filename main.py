@@ -15,7 +15,7 @@ cmd_setup = '{ "cmd": "setup", "cid0": 4522055, "cid1": 842158082, "cid2": 54003
 sock = socket(AF_INET, SOCK_DGRAM)
 sock.bind((UDP_IP, UDP_PORT))
 sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
-sock.settimeout(2.0)
+sock.settimeout(5.0)
 
 smib_dict = {}
 
@@ -24,7 +24,6 @@ def smib_search() -> dict:
     while True:
         command = '{"cmd":"browse"}'.encode()
         print("Start broadcast")
-        n = 0
         sock.sendto(command, ('<broadcast>', UDP_PORT))
         while True:
             try:
@@ -33,13 +32,16 @@ def smib_search() -> dict:
                     jsn = json.loads(data)
                     if addr not in smib_dict:
                         smib_dict.update({addr : jsn})
-                    print(f'{time.time() - start_time:.2f}')
-                    for key in smib_dict.keys():
-                        print(f'Fore.GREEN + {key} + Style.RESET_ALL : Fore.BLUE + {smib_dict[key]} + Style.RESET_ALL\n')
-                    time.sleep(5)
-                    break
+                    # time.sleep(5)
+                    # break
+                else:
+                    print(Fore.CYAN, data, Style.RESET_ALL)
+
             except TimeoutError:
-                print(Fore.RED + "UDP socket timeout error" + Style.RESET_ALL)
+                print(Fore.RED, "UDP socket timeout error", Style.RESET_ALL)
+                print(f'{time.time() - start_time:.2f}')
+                for key in smib_dict.keys():
+                    print(Fore.GREEN, key, Style.RESET_ALL, ":", Fore.BLUE, smib_dict[key], Style.RESET_ALL, "\n")
                 break
 
 if __name__ == "__main__":
