@@ -9,6 +9,7 @@ import multiprocessing
 UDP_IP = gethostbyname(gethostname())
 UDP_PORT = 30624
 TCP_PORT = 30625
+cmd_setup = '{ "cmd": "setup", "cid0": 4522055, "cid1": 842158082, "cid2": 540030027, "name": "", "asset": 0, "flags": 0, "mac": "10:20:30:47:64:0E", "net_ip": "192.168.38.09", "net_mask": "255.255.255.0", "net_gw": "192.168.10.1", "udp_port": 30624, "tcp_port": 30625, "server_ip": "0.0.0.0", "server_port": 0, "sas_address": 1 }'
 
 sock = socket(AF_INET, SOCK_DGRAM)
 sock.bind((UDP_IP, UDP_PORT))
@@ -40,6 +41,7 @@ def smib_search() -> dict:
 if __name__ == "__main__":
     start_time = time.time()
     smib_search()
+
 # search_proc = multiprocessing.Process(target=smib_search)
 # search_proc.start()
 # search_proc.join(2)
