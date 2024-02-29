@@ -22,32 +22,28 @@ smib_dict = {}
 #     @smib_udp.setter
 #     def smib_udp(self, *args, **kwargs):
 
-'''Create lists of machines with the same IP'''
-def find_duplicate_ip(smib_dict:dict) -> dict:
-    same_ip = {}
-    n = len(smib_dict)
-    if n < 2:
-         return None
-    for key in smib_dict:
-        current_value = smib_dict.pop(key)       
-
-    return same_ip
-
-def dict_iter(smib_dict: dict) -> any:
-    for item in smib_dict:
-        yield item
-        
-
-'''Create lists of machines with the same MAC'''
-# def find_duplicate_mac(smib_dict:dict) -> dict:
-
+'''Create lists of machines with the same fields value'''
+def find_duplicate_field(smib_dict:dict, field: str) -> dict:
+    same_field = {}
+    if len(smib_dict) < 2:
+         return same_field
+    for item1 in smib_dict.items():
+        current_cid = item1[0]
+        current_item = smib_dict.pop(current_cid)
+        for item2 in smib_dict.items():
+            second_cid = item2[0]
+            if current_item[field] == item2[1][field]:
+                if current_item[field] in same_field:
+                    same_field[current_item[field]].append(second_cid)
+                else: same_field.update({current_item[field]: [current_cid, second_cid]})
+        return same_field
 
 def main():
 
     while True:
         udp_broadcast(smib_dict)
-        find_duplicate_ip(smib_dict)
-        # find_duplicate_mac(smib_dict)
+        find_duplicate_field(smib_dict, 'net_ip')
+        find_duplicate_field(smib_dict, 'mac')
 
 
 if __name__ == "__main__":
