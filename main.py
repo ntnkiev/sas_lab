@@ -31,6 +31,7 @@ def find_duplicate_ip(smib_dict:dict) -> dict:
     for n in range(len(smib_dict)):
         
     while n > 0:
+        
         k = 0
         while k < n:
             if smib_dict[n-1][0]['net_ip'] == smib_dict[k][0]['net_ip']:
