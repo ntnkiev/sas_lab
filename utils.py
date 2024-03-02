@@ -1,4 +1,3 @@
-import socket
 from socket import *
 import json
 
@@ -15,7 +14,7 @@ sock.settimeout(.5)
 '''Create a list of all found slot machines'''
 def udp_broadcast(smib_dict:dict) -> dict:
     command = '{"cmd":"browse"}'.encode()
-    print("Start broadcast")
+    # print("Start broadcast")
     sock.sendto(command, ('<broadcast>', UDP_PORT))
     while True:
         try:

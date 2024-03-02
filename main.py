@@ -1,17 +1,11 @@
 # json.dumps(x)
 
-import socket
 import sys, time
 import json
 from socket import *
-import multiprocessing
+# import multiprocessing
 from colorama import *
 from utils import *
-
-
-
-
-smib_dict = {}
 
 # class Smibs:
 #     def __init__(self) -> None:
@@ -22,35 +16,29 @@ smib_dict = {}
 #     @smib_udp.setter
 #     def smib_udp(self, *args, **kwargs):
 
-'''Create lists of machines with the same IP'''
-def find_duplicate_ip(smib_dict:dict) -> dict:
-    same_ip = {}
-    n = len(smib_dict)
-    if n < 2:
-         return None
-    for n in range(len(smib_dict)):
-        
-    while n > 0:
-        
-        k = 0
-        while k < n:
-            if smib_dict[n-1][0]['net_ip'] == smib_dict[k][0]['net_ip']:
-                pass
-            k += 1
-        n -= 1
-    return same_ip
-        
-
-'''Create lists of machines with the same MAC'''
-# def find_duplicate_mac(smib_dict:dict) -> dict:
-
+'''Create dict of machines with the same fields value'''
+def find_duplicate_field(smib_dict:dict, field: str) -> dict:
+    same_field = {}
+    if len(smib_dict) < 2:
+         return same_field
+    for item1 in smib_dict.items():
+        current_cid = item1[0]
+        current_item = smib_dict.pop(current_cid)
+        for item2 in smib_dict.items():
+            second_cid = item2[0]
+            if current_item[field] == item2[1][field]:
+                if current_item[field] in same_field:
+                    same_field[current_item[field]].append(second_cid)
+                else: same_field.update({current_item[field]: [current_cid, second_cid]})
+        return same_field
 
 def main():
+    smib_dict = {}
 
     while True:
         udp_broadcast(smib_dict)
-        find_duplicate_ip(smib_dict)
-        # find_duplicate_mac(smib_dict)
+        find_duplicate_field(smib_dict, 'net_ip')
+        find_duplicate_field(smib_dict, 'mac')
 
 
 if __name__ == "__main__":
