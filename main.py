@@ -1,17 +1,11 @@
 # json.dumps(x)
 
-import socket
 import sys, time
 import json
 from socket import *
-import multiprocessing
+# import multiprocessing
 from colorama import *
 from utils import *
-
-
-
-
-smib_dict = {}
 
 # class Smibs:
 #     def __init__(self) -> None:
@@ -22,7 +16,7 @@ smib_dict = {}
 #     @smib_udp.setter
 #     def smib_udp(self, *args, **kwargs):
 
-'''Create lists of machines with the same fields value'''
+'''Create dict of machines with the same fields value'''
 def find_duplicate_field(smib_dict:dict, field: str) -> dict:
     same_field = {}
     if len(smib_dict) < 2:
@@ -39,6 +33,7 @@ def find_duplicate_field(smib_dict:dict, field: str) -> dict:
         return same_field
 
 def main():
+    smib_dict = {}
 
     while True:
         udp_broadcast(smib_dict)
