@@ -16,21 +16,6 @@ from utils import *
 #     @smib_udp.setter
 #     def smib_udp(self, *args, **kwargs):
 
-'''Create dict of machines with the same fields value'''
-def find_duplicate_field(smib_dict:dict, field: str) -> dict:
-    same_field = {}
-    if len(smib_dict) < 2:
-         return same_field
-    for item1 in smib_dict.items():
-        current_cid = item1[0]
-        current_item = smib_dict.pop(current_cid)
-        for item2 in smib_dict.items():
-            second_cid = item2[0]
-            if current_item[field] == item2[1][field]:
-                if current_item[field] in same_field:
-                    same_field[current_item[field]].append(second_cid)
-                else: same_field.update({current_item[field]: [current_cid, second_cid]})
-        return same_field
 
 def main():
     smib_dict = {}
