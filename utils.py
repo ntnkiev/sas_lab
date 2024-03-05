@@ -33,24 +33,25 @@ def udp_broadcast(smib_dict:dict) -> dict:
         except TimeoutError:
             return smib_dict
         
-def tcp_con(serv_ip, command) -> dict:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((serv_ip, TCP_PORT))
-        s.sendall(b"Hello, world")
-        data = s.recv(1024)
-        jsn = json.loads(data)
-        print(jsn)
+# def tcp_con(serv_ip, command) -> dict:
+#     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+#         s.connect((serv_ip, TCP_PORT))
+#         s.sendall(b"Hello, world")
+#         data = s.recv(1024)
+#         jsn = json.loads(data)
+#         print(jsn)
 
         
 '''Create dict of machines with the same fields value'''
 def find_duplicate_field(smib_dict: dict, field: str) -> dict:
+    smibs = smib_dict.copy()
     same_field = {}
-    if len(smib_dict) < 2:
+    if len(smibs) < 2:
          return same_field
-    for item1 in smib_dict.items():
+    for item1 in smibs.items():
         current_cid = item1[0]
-        current_item = smib_dict.pop(current_cid)
-        for item2 in smib_dict.items():
+        current_item = smibs.pop(current_cid)
+        for item2 in smibs.items():
             second_cid = item2[0]
             if current_item[field] == item2[1][field]:
                 if current_item[field] in same_field:
@@ -61,10 +62,10 @@ def find_duplicate_field(smib_dict: dict, field: str) -> dict:
 
 def main():
     smib_dict = {}
-    # while True:
-    #     udp_broadcast(smib_dict)
-    #     sleep(5)
-    tcp_con()
+    while True:
+        print(udp_broadcast(smib_dict))
+        sleep(5)
+    # tcp_con()
 
 
 
