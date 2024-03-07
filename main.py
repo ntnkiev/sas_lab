@@ -8,6 +8,10 @@ from socket import *
 from colorama import *
 from utils import *
 
+tcp_sock = socket(AF_INET, SOCK_STREAM)
+tcp_sock.bind((HOST, TCP_PORT))
+tcp_sock.settimeout(.5)
+
 class Smib:
     def __init__(self, id: dict) -> None:
         self.cid = str(id.pop('cid0')) + str(id.pop('cid1')) + str(id.pop('cid2'))
@@ -25,6 +29,9 @@ class Smib:
 class Hall(UserDict):
 
     def add_slot(self, smib):
+        with socket(AF_INET, SOCK_STREAM) as s:
+            s.connect((smib.data['net_ip'], TCP_PORT))
+
         self.data[smib.cid] = smib.data
 
 
@@ -33,13 +40,18 @@ def main():
     while True:
         smib_dict = {}
         udp_broadcast(smib_dict)
-        find_duplicate_field(smib_dict, 'net_ip')
-        find_duplicate_field(smib_dict, 'mac')
-        for rec in smib_dict.values():
-            smib = Smib(rec)
-            if smib not in hall.data:
+        same_ip = find_duplicate_field(smib_dict, 'net_ip')
+        if same_ip:
+            for key, value in same_ip.items():
+                print(f'{Fore.RED}Boards {value} have same ip {key}{Style.RESET_ALL}')
+        same_mac = find_duplicate_field(smib_dict, 'mac')
+        if same_mac:
+            for key, value in same_mac.items():
+                print(f'Boards {value} have same mac {key}')
+        for cid, data in smib_dict.items():
+            if cid not in hall.data.keys():
+                smib = Smib(data)
                 hall.add_slot(smib)
-        print(hall.data)
 
 
 

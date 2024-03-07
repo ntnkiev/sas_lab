@@ -6,7 +6,7 @@ HOST = gethostbyname(gethostname())
 UDP_PORT = 30624
 TCP_PORT = 30625
 cmd_setup = '{ "cmd": "setup", "cid0": 4522055, "cid1": 842158082, "cid2": 540030027, "name": "", "asset": 0, "flags": 0, "mac": "10:20:30:47:64:0E", "net_ip": "192.168.38.09", "net_mask": "255.255.255.0", "net_gw": "192.168.10.1", "udp_port": 30624, "tcp_port": 30625, "server_ip": "0.0.0.0", "server_port": 0, "sas_address": 1 }'
-
+#{ "cmd": "setup", "cid0": 4718662, "cid1": 842158089, "cid2": 540030027, "name": "", "asset": 0, "flags": 0, "mac": "10:20:30:4A:64:04", "net_ip": "192.168.38.56", "net_mask": "255.255.255.0", "net_gw": "192.168.38.1", "udp_port": 30624, "tcp_port": 30625, "server_ip": "0.0.0.0", "server_port": 0, "sas_address": 1 }
 sock = socket(AF_INET, SOCK_DGRAM)
 sock.bind((HOST, UDP_PORT))
 sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
