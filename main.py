@@ -7,12 +7,13 @@ from socket import *
 # import multiprocessing
 from colorama import *
 from utils import *
-
+import smib_command
 
 class Smib:
     def __init__(self, id: dict) -> None:
         self.cid = str(id['cid0']) + ":" + str(id['cid1']) + ":" + str(id['cid2'])
         self.data = id
+        self.socket = None
     @property
     def smib_udp(self):
         return self.__smib_udp
@@ -29,8 +30,14 @@ class Hall(UserDict):
         tcp_sock = socket(AF_INET, SOCK_STREAM)
         tcp_sock.bind((HOST, TCP_PORT))
         tcp_sock.settimeout(.5)
-        with socket(AF_INET, SOCK_STREAM) as s:
-            s.connect((smib.data['net_ip'], TCP_PORT))
+        with socket(AF_INET, SOCK_STREAM) as sock:
+            sock.connect((smib.data['net_ip'], TCP_PORT))
+            self.data[socket] = sock
+
+    def send_command(self, cid, command):
+        self.data[cid][socket].sendall(command)
+        data = self[cid].socket.recv(1024)
+        return data
 
     def find_smib(self, cid):
         if cid in self.data.keys():
@@ -55,9 +62,14 @@ def main():
             for key, value in same_mac.items():
                 print(f'Boards {value} have same mac {key}')
         for cid, data in smib_dict.items():
-            if  cid != '2031659:1111642132:540095031' and not hall.find_smib(cid):
-                smib = Smib(data)
-                hall.add_slot(smib)
+            if cid == '2031659:1111642132:540095031':
+                pass
+            elif    not hall.find_smib(cid):
+                    smib = Smib(data)
+                    hall.add_slot(smib)
+            else:
+                print(hall.send_command(cid, smib_command.command_identyfy))
+        
         
 
 
